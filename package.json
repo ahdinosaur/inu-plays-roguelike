@@ -1,0 +1,56 @@
+{
+  "name": "inu-plays-rougelike",
+  "version": "0.0.0",
+  "description": "'Twitch Plays Pokémon'-style rouglelike game using inu",
+  "main": "app",
+  "scripts": {
+    "test": "tape test.js",
+    "start": "budo app:bundle.js -d app --live -- -d",
+    "bundle": "browserify app -g envify -g uglifyify",
+    "build": "npm run --silent bundle -- -o app/bundle.js",
+    "disc": "npm run --silent bundle -- --full-paths | discify --open",
+    "push": "gh-pages -d app",
+    "deploy": "npm-run-all -s build push"
+  },
+  "browserify": {
+    "transform": [
+      [
+        "babelify",
+        {
+          "presets": [
+            "es2015"
+          ]
+        }
+      ]
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ahdinosaur/inu-plays-rougelike.git"
+  },
+  "keywords": [],
+  "author": "Mikey <michael.williams@enspiral.com> (http://dinosaur.is)",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/ahdinosaur/inu-plays-rougelike/issues"
+  },
+  "homepage": "https://github.com/ahdinosaur/inu-plays-rougelike#readme",
+  "devDependencies": {
+    "browserify": "^13.0.0",
+    "budo": "^8.1.0",
+    "disc": "^1.3.2",
+    "envify": "^3.4.0",
+    "gh-pages": "^0.11.0",
+    "npm-run-all": "^1.6.0",
+    "tape": "^4.5.1",
+    "uglifyify": "^3.0.1",
+    "watchify": "^3.7.0"
+  },
+  "dependencies": {
+    "babel-preset-es2015": "^6.9.0",
+    "babelify": "^7.3.0",
+    "inu": "^2.3.2",
+    "pull-keys": "^1.0.0",
+    "tcomb": "^3.2.2"
+  }
+}
