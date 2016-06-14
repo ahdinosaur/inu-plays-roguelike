@@ -1,19 +1,6 @@
 const { start, pull, html } = require('inu')
 const Tc = require('tcomb')
 
-/*
-
-possible characters:
-
-- empty space: ' '
-- open space: '.'
-- vertical wall: '|'
-- horizontal wall: '-'
-- adventurer: '@'
-- dragon: 'D'
-
-*/
-
 const Model = require('./types/model')
 const State = require('./types/state')
 const Action = require('./types/action')

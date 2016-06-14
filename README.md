@@ -1,6 +1,40 @@
 # inu-plays-rougelike
 
-'Twitch Plays Pokémon'-style rouglelike game using inu
+**work in progress**
+
+['Twitch Plays Pokémon'-style](https://en.wikipedia.org/wiki/Twitch_Plays_Pok%C3%A9mon) [Rouglelike](https://en.wikipedia.org/wiki/Roguelike) game using [`inu`](https://github.com/ahdinosaur/inu)
+
+## architecture
+
+- server has state of app
+- when user joins, connects to server to receive state
+  - if user moves, sends action to server
+  - server updates state and sends new state to *all* users
+
+TODO: use [Entity Component System](https://en.wikipedia.org/wiki/Entity_component_system) architecture.
+
+TODO: use [`webtrc-swarm`](https://github.com/mafintosh/webrtc-swarm/) instead of central server.
+
+## characters
+
+- empty space: ' '
+- open space: '.'
+- vertical wall: '|'
+- horizontal wall: '-'
+- adventurer: '@'
+- dragon: 'D'
+
+as in
+
+```
+-----------
+|....@....|
+|.........|
+|.........|
+|.........|
+|....D....|
+-----------
+```
 
 ## developer how to
 
@@ -22,6 +56,7 @@ npm start
 
 ```shell
 npm run deploy
+```
 
 ## license
 

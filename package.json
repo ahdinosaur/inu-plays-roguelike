@@ -1,6 +1,7 @@
 {
   "name": "inu-plays-rougelike",
   "version": "0.0.0",
+  "private": true,
   "description": "'Twitch Plays Pokémon'-style rouglelike game using inu",
   "main": "app",
   "scripts": {
