@@ -5,27 +5,23 @@ const Model = require('./types/model')
 const State = require('./types/state')
 const Action = require('./types/action')
 const Effect = require('./types/effect')
-const Init = require('./effects/init')
+const Connect = require('./effects/connect')
 
 const app = {
   init: () => ({
-    model: Model.parse([
-      '-----------',
-      '|.........|',
-      '|.........|',
-      '|.........|',
-      '|.........|',
-      '|.........|',
-      '-----------'
-    ].join('\n')),
-    effect: Init({})
+    model: {
+      entities: {}
+    },
+    effect: Connect({
+      url: 'ws://localhost:9965'
+    })
   }),
   view: (model, dispatch) => {
     return html`
       <main>
         <pre>${
-          Model.stringify(model)
-        }</pre>
+    Model.stringify(model)
+    }</pre>
       </main>
     `
   },

@@ -14,7 +14,7 @@ const aboveOpenSpace = require('../util/above-open-space')
 
 const Model = Tc.struct({
   entities: Entities
-  // viewPoint
+// viewPoint
 })
 
 Model.parse = function parseModel (string) {
@@ -28,8 +28,7 @@ Model.parse = function parseModel (string) {
       const entity = {
         id: uniqueId(),
         position,
-        character
-      }
+      character}
       entities[entity.id] = entity
 
       if (aboveOpenSpace(entity.character)) {
@@ -42,7 +41,7 @@ Model.parse = function parseModel (string) {
       }
     })
   })
-  return Model({ entities })
+  return Model({ entities})
 }
 
 Model.stringify = function stringifyModel (model) {

@@ -24,7 +24,7 @@ Move.prototype.update = function moveUpdate (model) {
     includes(colliderChars, '|')
     || includes(colliderChars, '-')
   ) {
-    return { model }
+    return { model}
   }
 
   const newModel = Model.update(model, {

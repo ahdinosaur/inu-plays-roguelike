@@ -16,5 +16,4 @@ const keyToDirection = {
 const Entities = Tc.dict(Id, Entity)
 
 function stringify (entities) {
-  
 }

@@ -2,7 +2,7 @@
 
 **work in progress**
 
-['Twitch Plays Pokémon'-style](https://en.wikipedia.org/wiki/Twitch_Plays_Pok%C3%A9mon) [Rouglelike](https://en.wikipedia.org/wiki/Roguelike) game using [`inu`](https://github.com/ahdinosaur/inu)
+['Twitch Plays Pokémon'](https://en.wikipedia.org/wiki/Twitch_Plays_Pok%C3%A9mon)-style ['Rouglelike'](https://en.wikipedia.org/wiki/Roguelike) game using [`inu`](https://github.com/ahdinosaur/inu)
 
 ## architecture
 
