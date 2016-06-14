@@ -1,11 +1,10 @@
 const Tc = require('tcomb')
 
-const Serve = require('../effects/serve')
-const ScheduleSend = require('../effects/schedule-send')
-const Connect = require('../effects/connect')
 const Genesis = require('../effects/genesis')
+const Serve = require('../effects/serve')
+const Connect = require('../effects/connect')
 const Keys = require('../effects/keys')
 
-const Effect = Tc.union([Serve, ScheduleSend, Connect, Genesis, Keys], 'Effect')
+const Effect = Tc.union([Genesis, Serve, Connect, Keys], 'Effect')
 
 module.exports = Effect

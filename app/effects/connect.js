@@ -1,28 +1,35 @@
 const Tc = require('tcomb')
 const { pull } = require('inu')
 const ws = require('pull-ws-server')
+const cat = require('pull-cat')
+const pullJson = require('pull-json-doubleline')
 
-const Send = require('../actions/send')
+const Set = require('../actions/set')
 
 const Connect = Tc.struct({
   url: Tc.String
 })
 
-Connect.prototype.run = function runConnect (actions) {
+Connect.prototype.run = function runConnect (streams) {
   const effect = this
 
   const client = ws.connect(effect.url)
 
   pull(
-    actions(),
-    pull.filter((action) => Send.is),
-    pull.map((send) => send.action),
+    streams.actions(),
+    pull.filter(Set.is),
+    pullJson.stringify(),
     client.sink
   )
 
-  pull(
+  return pull(
     client.source,
-    pull.log()
+    pullJson.parse(),
+    pull.through(console.log.bind(console)),
+    pull.filter((o) => !(o instanceof Error)),
+    pull.map((model) => {
+      return Set({ model })
+    })
   )
 }
 

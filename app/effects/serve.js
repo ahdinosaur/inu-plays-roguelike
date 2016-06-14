@@ -3,16 +3,18 @@ const { pull } = require('inu')
 const Pushable = require('pull-pushable')
 const ws = require('pull-ws-server')
 const cat = require('pull-cat')
+const pullJson = require('pull-json-doubleline')
 
 const Id = require('../types/id')
-const Send = require('../actions/send')
+const Join = require('../actions/join')
+const Move = require('../actions/move')
 
 const Serve = Tc.struct({
   port: Tc.Number,
   id: Id
 }, 'Serve')
 
-Serve.prototype.run = function (actions) {
+Serve.prototype.run = function (streams) {
   const effect = this
 
   const pushable = Pushable((err) => {
@@ -20,38 +22,40 @@ Serve.prototype.run = function (actions) {
     console.error(err)
   })
 
-  console.log('creating server')
+  /*
+  var lastModel
+  pull(
+    streams.models(),
+    pull.drain((model) => {
+      lastModel = model
+    })
+  )
+  */
 
   const server = ws
-    .createServer((client) => {
-      console.log('client', client)
-
-    /*
-    pull(
-      cat(
-        pull.values([Flush({})]),
-        stream.source
-      ),
-      pull.log()
-      //pull.drain(pushable.push)
-    )
+  .createServer((client) => {
+    pushable.push(Join({ client }))
 
     pull(
-      actions(),
-      pull.filter((action) => Send.is),
-      pull.map((send) => {
-        return Action.update(send.action, {
-          id: { $set: effect.id }
-        })
-      }),
-      stream.sink
+      client.source,
+      pullJson.parse(),
+      pull.filter((o) => !(o instanceof Error)),
+      pull.drain((action) => {
+        pushable.push(Move(action))
+      })
     )
-    */
-    })
-    .listen(effect.port)
+      
+    pull(
+      streams.models(),
+      pullJson.stringify(),
+      client.sink
+    )
+  })
+  .listen(effect.port)
 
-  //return pushable
-  return pull.empty()
+  console.log(`server is listening at ws://localhost:${effect.port}`)
+
+  return pushable
 }
 
 module.exports = Serve

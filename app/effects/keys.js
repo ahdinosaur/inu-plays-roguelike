@@ -2,7 +2,6 @@ const Tc = require('tcomb')
 const { pull } = require('inu')
 const pullKeys = require('pull-keys')
 
-const Send = require('../actions/send')
 const Move = require('../actions/move')
 
 const Keys = Tc.struct({}, 'Keys')
@@ -25,10 +24,8 @@ Keys.prototype.run = function (actions) {
       up: true
     }),
     pull.map((key) => {
-      return Send({
-        action: Move({
-          direction: keyToDirection[key]
-        })
+      return Move({
+        direction: keyToDirection[key]
       })
     })
   )
