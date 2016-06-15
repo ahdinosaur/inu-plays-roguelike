@@ -17,17 +17,14 @@ Connect.prototype.run = function runConnect (streams) {
 
   pull(
     streams.actions(),
-    pull.filter(Set.is),
-    pullJson.stringify(),
-    client.sink
+    pull.filterNot(Set.is),
+    pullJson(client.sink)
   )
 
   return pull(
-    client.source,
-    pullJson.parse(),
-    pull.through(console.log.bind(console)),
-    pull.filter((o) => !(o instanceof Error)),
+    pullJson(client.source),
     pull.map((model) => {
+      console.log('model', model)
       return Set({ model })
     })
   )

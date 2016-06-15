@@ -2,18 +2,18 @@ const { start, pull } = require('inu')
 const Tc = require('tcomb')
 const pullMany = require('pull-many')
 
+const app = require('./')
 const uniqueId = require('./util/unique-id')
 const Entities = require('./types/entities')
 const State = require('./types/state')
 const Action = require('./types/action')
-const Effect = require('./types/effect')
 const Serve = require('./effects/serve')
 const Genesis = require('./effects/genesis')
 const Set = require('./actions/set')
 
 const userId = uniqueId()
 
-const app = {
+const server = {
   init: () => ({
     model: {
       entities: Entities.parse([
@@ -37,24 +37,12 @@ const app = {
       })
     ]
   }),
-  view: (model, dispatch) => {
-    return Entities.stringify(model.entities)
-  },
-  update: (model, action) => {
-    return State(Action(action).update(model))
-  },
-  run: (effect, streams) => {
-    // allow for array of effects
-    if (Array.isArray(effect)) {
-      return pullMany(effect.map((eff) => {
-        return Effect(eff).run(streams)
-      }))
-    }
-    return Effect(effect).run(streams)
-  }
+  update: app.update,
+  view: app.view,
+  run: app.run
 }
 
-const streams = start(app)
+const streams = start(server)
 
 pull(
   streams.actions(),

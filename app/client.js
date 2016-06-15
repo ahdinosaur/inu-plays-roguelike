@@ -1,45 +1,46 @@
 const { start, pull, html } = require('inu')
 const Tc = require('tcomb')
 
-const Entities = require('./types/entities')
-const State = require('./types/state')
-const Action = require('./types/action')
-const Effect = require('./types/effect')
+const app = require('./')
 const Connect = require('./effects/connect')
+const Keys = require('./effects/keys')
 const Set = require('./actions/set')
 
-const app = {
+const client = {
   init: () => ({
-    model: {
-      entities: {},
-      players: 1
-    },
-    effect: Connect({
-      url: 'ws://localhost:9965'
-    })
+    model: null,
+    effect: [
+      Connect({
+        url: 'ws://localhost:9965'
+      }),
+      Keys({})
+    ]
   }),
+
+  update: (model, action) => {
+    if (Set.is(action)) {
+      return app.update(model, action)
+    }
+    // otherwise ignore action
+    return { model }
+  },
+
   view: (model, dispatch) => {
+    if (!model) return null
+
     return html`
       <main>
         <pre>${
-          Entities.stringify(model.entities)
+          app.view(model, dispatch)
         }</pre>
       </main>
     `
   },
-  update: (model, action) => {
-    if (Set.is(action)) {
-      return State(Action(action).update(model))
-    }
-    // otherwise ignore action
-    return State({ model })
-  },
-  run: (effect, actions) => {
-    return Effect(effect).run(actions)
-  }
+    
+  run: app.run
 }
 
-const streams = start(app)
+const streams = start(client)
 const main = document.querySelector('main')
 
 pull(

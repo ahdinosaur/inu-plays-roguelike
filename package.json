@@ -55,7 +55,7 @@
     "inu": "github:ahdinosaur/inu#run-all-streams",
     "lodash": "^4.13.1",
     "pull-cat": "^1.1.9",
-    "pull-json-doubleline": "^1.1.0",
+    "pull-json-doubleline": "ahdinosaur/pull-json-doubleline#v2",
     "pull-keys": "^1.0.0",
     "pull-many": "^1.0.6",
     "pull-pushable": "^2.0.0",

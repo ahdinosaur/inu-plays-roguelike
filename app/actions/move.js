@@ -8,7 +8,7 @@ const Direction = require('../types/direction')
 const Model = require('../types/model')
 
 const Move = Tc.struct({
-  id: Id,
+  id: Tc.maybe(Id),
   direction: Direction
 })
 

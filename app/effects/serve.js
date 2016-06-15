@@ -34,22 +34,24 @@ Serve.prototype.run = function (streams) {
 
   const server = ws
   .createServer((client) => {
-    pushable.push(Join({ client }))
-
     pull(
-      client.source,
-      pullJson.parse(),
-      pull.filter((o) => !(o instanceof Error)),
+      pullJson(client.source),
       pull.drain((action) => {
-        pushable.push(Move(action))
+        const userAction = Object.assign(action, {
+          id: effect.id
+        })
+        pushable.push(Move(userAction))
       })
     )
       
     pull(
       streams.models(),
-      pullJson.stringify(),
-      client.sink
+      pullJson(client.sink)
     )
+
+    // push join after client connects
+    // to cause model to be updated
+    pushable.push(Join({ client }))
   })
   .listen(effect.port)
 
