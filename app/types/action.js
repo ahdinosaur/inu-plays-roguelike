@@ -1,10 +1,8 @@
 const Tc = require('tcomb')
+const { values } = require('lodash')
 
-const Move = require('../actions/move')
-const Create = require('../actions/create')
-const Set = require('../actions/set')
-const Join = require('../actions/join')
+const actions = require('../actions')
 
-const Action = Tc.union([Move, Create, Set, Join], 'Action')
+const Action = Tc.union(values(actions), 'Action')
 
 module.exports = Action

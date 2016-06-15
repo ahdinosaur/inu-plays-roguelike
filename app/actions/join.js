@@ -4,7 +4,7 @@ const Model = require('../types/model')
 
 const Join = Tc.struct({
   client: Tc.Object
-})
+}, 'Join')
 
 Join.prototype.update = function joinUpdate (model) {
   const newModel = Model.update(model, {

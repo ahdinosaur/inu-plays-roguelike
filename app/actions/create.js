@@ -11,7 +11,7 @@ const Create = Tc.struct({
   id: Id,
   character: Character,
   position: Tc.maybe(Vector)
-})
+}, 'Create')
 
 // place entity at a random open space '.'
 Create.prototype.update = function createUpdate (model) {

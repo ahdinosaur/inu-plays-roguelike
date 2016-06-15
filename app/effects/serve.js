@@ -1,13 +1,13 @@
 const Tc = require('tcomb')
 const { pull } = require('inu')
+const { assign } = require('lodash')
 const Pushable = require('pull-pushable')
 const ws = require('pull-ws-server')
 const cat = require('pull-cat')
 const pullJson = require('pull-json-doubleline')
 
 const Id = require('../types/id')
-const Join = require('../actions/join')
-const Move = require('../actions/move')
+const actions = require('../actions')
 
 const Serve = Tc.struct({
   port: Tc.Number,
@@ -37,10 +37,11 @@ Serve.prototype.run = function (streams) {
     pull(
       pullJson(client.source),
       pull.drain((action) => {
-        const userAction = Object.assign(action, {
-          id: effect.id
-        })
-        pushable.push(Move(userAction))
+        const Type = actions[action.type]
+        pushable.push(Type(assign(
+          action,
+          { id: effect.id }
+        )))
       })
     )
       
@@ -51,7 +52,7 @@ Serve.prototype.run = function (streams) {
 
     // push join after client connects
     // to cause model to be updated
-    pushable.push(Join({ client }))
+    pushable.push(actions.Join({ client }))
   })
   .listen(effect.port)
 

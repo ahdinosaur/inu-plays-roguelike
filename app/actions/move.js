@@ -10,7 +10,7 @@ const Model = require('../types/model')
 const Move = Tc.struct({
   id: Tc.maybe(Id),
   direction: Direction
-})
+}, 'Move')
 
 Move.prototype.update = function moveUpdate (model) {
   const action = this
