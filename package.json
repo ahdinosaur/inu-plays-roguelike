@@ -25,6 +25,10 @@
       "babelify"
     ]
   },
+  "engines": {
+    "node": "^6.0.0",
+    "npm": "^3.0.0"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ahdinosaur/inu-plays-rougelike.git"
