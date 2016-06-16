@@ -11,13 +11,13 @@ const actions = require('../actions')
 
 const Serve = Tc.struct({
   port: Tc.Number,
-  server: Tc.maybe(Tc.Object),
+  httpServer: Tc.maybe(Tc.Object),
   id: Id
 }, 'Serve')
 
 Serve.prototype.run = function (streams) {
   const effect = this
-  const { port, server, id } = effect
+  const { port, httpServer, id } = effect
 
   const pushable = Pushable((err) => {
     console.log('closing server')
@@ -25,31 +25,29 @@ Serve.prototype.run = function (streams) {
   })
 
   const wsServer = ws
-  .createServer({ server }, (client) => {
-    pull(
-      pullJson(client.source),
-      pull.drain((action) => {
-        const Type = actions[action.type]
-        pushable.push(Type(assign(
-          action,
-          { id }
-        )))
-      }, (err) => {
-        pushable.push(actions.Part({ client }))
-      })
-    )
-      
-    pull(
-      streams.models(),
-      pullJson(client.sink)
-    )
+  .createServer({ server: httpServer }, (client) => {
+
+    const server = {
+      source: streams.models(),
+      sink: pull(
+        pull.drain((action) => {
+          const Type = actions[action.type]
+          pushable.push(Type(assign(action, { id })))
+        }, (err) => {
+          pushable.push(actions.Part({ client }))
+        })
+      )
+    }
+
+    pull(pullJson(client.source), server.sink)
+    pull(server.source, pullJson(client.sink))
 
     // push join after client connects
     // to cause model to be updated
     pushable.push(actions.Join({ client }))
   })
 
-  if (!server) {
+  if (!httpServer) {
     wsServer.listen(port)
   }
 

@@ -15,24 +15,27 @@ const Connect = Tc.struct({
 Connect.prototype.run = function runConnect (streams) {
   const effect = this
 
-  const client = ws.connect(effect.url)
+  const server = ws.connect(effect.url)
 
-  pull(
-    streams.actions(),
-    pull.filterNot(Set.is),
-    pull.map((action) => {
-      const Type = Action.dispatch(action)
-      return assign({ type: Type.meta.name }, action)
-    }),
-    pullJson(client.sink)
-  )
+  const client = {
+    source: pull(
+      streams.actions(),
+      pull.filterNot(Set.is),
+      pull.map((action) => {
+        const Type = Action.dispatch(action)
+        return assign({ type: Type.meta.name }, action)
+      })
+    ),
+    through: pull(
+      pull.map((model) => {
+        return Set({ model })
+      })
+    )
+  }
 
-  return pull(
-    pullJson(client.source),
-    pull.map((model) => {
-      return Set({ model })
-    })
-  )
+  pull(client.source, pullJson(server.sink))
+
+  return pull(pullJson(server.source), client.through)
 }
 
 module.exports = Connect
