@@ -4,6 +4,8 @@
 
 ['Twitch Plays Pokémon'](https://en.wikipedia.org/wiki/Twitch_Plays_Pok%C3%A9mon)-style ['Rouglelike'](https://en.wikipedia.org/wiki/Roguelike) game using [`inu`](https://github.com/ahdinosaur/inu)
 
+**play it on a live server!**: <http://inu-plays-roguelike.herokuapp.com/>
+
 ## architecture
 
 - server has state of app
