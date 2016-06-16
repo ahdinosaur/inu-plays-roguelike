@@ -35,6 +35,26 @@ const client = {
 
     return html`
       <main>
+        <header>
+          <h1>
+            <a href="https://github.com/ahdinosaur/inu-plays-roguelike">
+              inu-plays-roguelike
+            </a>
+          </h1>
+          <p>
+            <a href="https://en.wikipedia.org/wiki/Twitch_Plays_Pok%C3%A9mon">
+              'Twitch Plays Pokémon'
+            </a>
+            -style
+            <a href="https://en.wikipedia.org/wiki/Roguelike">
+              'Roguelike'
+            </a>
+            game using
+            <a href="https://github.com/ahdinosaur/inu">
+              <code>inu</code>
+            </a>
+          </p>
+        </header>
         <pre>${
           app.view(model, dispatch)
         }</pre>
