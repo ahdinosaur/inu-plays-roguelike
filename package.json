@@ -13,10 +13,9 @@
     "bundle": "browserify . -g envify -g uglifyify",
     "prod:client": "npm run --silent bundle -- -o app/bundle.js",
     "prod:server": "node app/server",
-    "prod": "NODE_ENV=production npm-run-all -p prod:*",
+    "prod": "NODE_ENV=production npm-run-all -s prod:client prod:server",
     "start": "npm run prod",
     "disc": "npm run --silent bundle -- --full-paths | discify --open",
-    "deploy": "npm-run-all -s build push",
     "lint": "standard",
     "format": "standard-format"
   },
