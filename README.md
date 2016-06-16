@@ -58,6 +58,11 @@ npm start
 npm run deploy
 ```
 
+## resources
+
+- [Amit’s Game Programming Information](http://www-cs-students.stanford.edu/~amitp/gameprog.html)
+- [Procedural Content Generation Wiki - Map Generation](http://pcg.wikidot.com/pcg-algorithm%3amap-generation)
+
 ## license
 
 The Apache License
