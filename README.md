@@ -1,8 +1,8 @@
-# inu-plays-rougelike
+# inu-plays-roguelike
 
 **work in progress**
 
-['Twitch Plays Pokémon'](https://en.wikipedia.org/wiki/Twitch_Plays_Pok%C3%A9mon)-style ['Rouglelike'](https://en.wikipedia.org/wiki/Roguelike) game using [`inu`](https://github.com/ahdinosaur/inu)
+['Twitch Plays Pokémon'](https://en.wikipedia.org/wiki/Twitch_Plays_Pok%C3%A9mon)-style ['Roguelike'](https://en.wikipedia.org/wiki/Roguelike) game using [`inu`](https://github.com/ahdinosaur/inu)
 
 **play it on a live server!**: <http://inu-plays-roguelike.herokuapp.com/>
 
@@ -43,7 +43,7 @@ as in
 ### install
 
 ```shell
-git clone git://github.com/ahdinosaur/inu-plays-rougelike
+git clone git://github.com/ahdinosaur/inu-plays-roguelike
 cd inu-plays-roguelike
 npm install
 ```

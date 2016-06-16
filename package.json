@@ -1,8 +1,8 @@
 {
-  "name": "inu-plays-rougelike",
+  "name": "inu-plays-roguelike",
   "version": "0.0.0",
   "private": true,
-  "description": "'Twitch Plays Pokémon'-style rouglelike game using inu",
+  "description": "'Twitch Plays Pokémon'-style roguelike game using inu",
   "main": "app/server",
   "browser": "app/client",
   "scripts": {
@@ -30,15 +30,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ahdinosaur/inu-plays-rougelike.git"
+    "url": "git+https://github.com/ahdinosaur/inu-plays-roguelike.git"
   },
   "keywords": [],
   "author": "Mikey <michael.williams@enspiral.com> (http://dinosaur.is)",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/ahdinosaur/inu-plays-rougelike/issues"
+    "url": "https://github.com/ahdinosaur/inu-plays-roguelike/issues"
   },
-  "homepage": "https://github.com/ahdinosaur/inu-plays-rougelike#readme",
+  "homepage": "https://github.com/ahdinosaur/inu-plays-roguelike#readme",
   "devDependencies": {
     "budo": "^8.1.0",
     "disc": "^1.3.2",
