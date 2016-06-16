@@ -51,7 +51,7 @@ Serve.prototype.run = function (streams) {
     wsServer.listen(port)
   }
 
-  console.log(`server is listening at ws://localhost:${port}`)
+  console.log(`websocket server is listening at ws://localhost:${port}`)
 
   return pushable
 }

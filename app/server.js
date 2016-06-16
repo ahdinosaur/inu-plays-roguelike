@@ -23,6 +23,8 @@ if (isProd) {
   httpServer = http.createServer(
     ecstatic(__dirname)
   ).listen(port)
+
+  console.log(`http server is listening at http://localhost:${port}`)
 }
 
 const server = {
