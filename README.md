@@ -49,13 +49,13 @@ npm install
 ### start development server
 
 ```shell
-npm start
+npm run dev
 ```
 
-### deploy to production
+### start production server
 
 ```shell
-npm run deploy
+npm run prod
 ```
 
 ## resources

@@ -13,6 +13,18 @@ const Set = require('./actions/set')
 
 const userId = uniqueId()
 
+var httpServer
+const isProd = process.env.NODE_ENV === 'production'
+const port = process.env.PORT || 9965
+if (isProd) {
+  const http = require('http')
+  const ecstatic = require('ecstatic')
+
+  httpServer = http.createServer(
+    ecstatic(__dirname)
+  ).listen(port)
+}
+
 const server = {
   init: () => ({
     model: {
@@ -30,7 +42,8 @@ const server = {
     effect: [
       Serve({
         id: userId,
-        port: 9965
+        port: port,
+        server: httpServer
       }),
       Genesis({
         id: userId

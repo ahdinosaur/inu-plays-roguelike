@@ -7,13 +7,15 @@
   "browser": "app/client",
   "scripts": {
     "test": "tape test/**/*.js",
-    "client": "budo app/client:bundle.js -d app --live -- -d",
-    "server": "node-dev app/server",
-    "start": "npm-run-all -p client server",
-    "bundle": "browserify app -g envify -g uglifyify",
-    "build": "npm run --silent bundle -- -o app/bundle.js",
+    "dev:client": "budo app/client:bundle.js -d app --live -- -d",
+    "dev:server": "node-dev app/server",
+    "dev": "npm-run-all -p dev:*",
+    "bundle": "browserify . -g envify -g uglifyify",
+    "prod:client": "npm run --silent bundle -- -o app/bundle.js",
+    "prod:server": "node app/server",
+    "prod": "NODE_ENV=production npm-run-all -p prod:*",
+    "start": "npm run prod",
     "disc": "npm run --silent bundle -- --full-paths | discify --open",
-    "push": "gh-pages -d app",
     "deploy": "npm-run-all -s build push",
     "lint": "standard",
     "format": "standard-format"
@@ -52,6 +54,7 @@
   "dependencies": {
     "babel-preset-es2015": "^6.9.0",
     "babelify": "^7.3.0",
+    "ecstatic": "^1.4.1",
     "inu": "github:ahdinosaur/inu#run-all-streams",
     "lodash": "^4.13.1",
     "pull-cat": "^1.1.9",
@@ -60,6 +63,7 @@
     "pull-many": "^1.0.6",
     "pull-pushable": "^2.0.0",
     "pull-ws-server": "^1.9.2",
-    "tcomb": "^3.2.2"
+    "tcomb": "^3.2.2",
+    "wsurl": "^1.0.0"
   }
 }

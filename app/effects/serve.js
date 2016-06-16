@@ -11,36 +11,28 @@ const actions = require('../actions')
 
 const Serve = Tc.struct({
   port: Tc.Number,
+  server: Tc.maybe(Tc.Object),
   id: Id
 }, 'Serve')
 
 Serve.prototype.run = function (streams) {
   const effect = this
+  const { port, server, id } = effect
 
   const pushable = Pushable((err) => {
     console.log('closing server')
     console.error(err)
   })
 
-  /*
-  var lastModel
-  pull(
-    streams.models(),
-    pull.drain((model) => {
-      lastModel = model
-    })
-  )
-  */
-
-  const server = ws
-  .createServer((client) => {
+  const wsServer = ws
+  .createServer({ server }, (client) => {
     pull(
       pullJson(client.source),
       pull.drain((action) => {
         const Type = actions[action.type]
         pushable.push(Type(assign(
           action,
-          { id: effect.id }
+          { id }
         )))
       })
     )
@@ -54,9 +46,12 @@ Serve.prototype.run = function (streams) {
     // to cause model to be updated
     pushable.push(actions.Join({ client }))
   })
-  .listen(effect.port)
 
-  console.log(`server is listening at ws://localhost:${effect.port}`)
+  if (!server) {
+    wsServer.listen(port)
+  }
+
+  console.log(`server is listening at ws://localhost:${port}`)
 
   return pushable
 }
