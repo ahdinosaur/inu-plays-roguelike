@@ -63,6 +63,7 @@
     "pull-keys": "^1.0.0",
     "pull-many": "^1.0.6",
     "pull-pairs": "^1.0.0",
+    "pull-next": "0.0.0",
     "pull-pushable": "^2.0.0",
     "pull-ws-server": "^1.9.2",
     "tcomb": "^3.2.2",
