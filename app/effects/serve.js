@@ -34,6 +34,8 @@ Serve.prototype.run = function (streams) {
           action,
           { id }
         )))
+      }, (err) => {
+        pushable.push(actions.Part({ client }))
       })
     )
       
