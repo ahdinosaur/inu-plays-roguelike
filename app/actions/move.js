@@ -1,5 +1,6 @@
 const Tc = require('tcomb')
 const map = require('lodash/map')
+const filter = require('lodash/filter')
 const includes = require('lodash/includes')
 
 const atPosition = require('../util/at-position')
@@ -18,13 +19,12 @@ Move.prototype.update = function moveUpdate (model) {
   const newPosition = move(entity.position, action.direction)
 
   // if collides with wall, ignore move
-  const colliders = atPosition(model.entities, newPosition)
-  const colliderChars = map(colliders, 'character')
-  if (
-    includes(colliderChars, '|')
-    || includes(colliderChars, '-')
-  ) {
-    return { model}
+  const colliders = filter(
+    atPosition(model.entities, newPosition),
+    (c) => !c.walkable
+  )
+  if (colliders.length > 0) {
+    return { model }
   }
 
   const newModel = Model.update(model, {

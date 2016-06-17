@@ -6,6 +6,7 @@ const Id = require('../types/id')
 const Character = require('../types/character')
 const Model = require('../types/model')
 const Vector = require('../types/vector')
+const entities = require('../entities')
 
 const Create = Tc.struct({
   id: Id,
@@ -18,16 +19,13 @@ Create.prototype.update = function createUpdate (model) {
   const action = this
   var position = action.position
   if (!position) {
-    const openSpaces = filter(model.entities, (entity) => {
-      return entity.character === '.'
-    })
+    const openSpaces = filter(model.entities, (e) => e.open)
     position = sample(openSpaces).position
   }
-  const entity = {
-    id: action.id,
-    character: action.character,
-    position: position
-  }
+  const entity = Object.assign(
+    { id: action.id, position },
+    entities.you
+  )
   const newModel = Model.update(model, {
     entities: { [action.id]: { $set: entity } }
   })

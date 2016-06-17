@@ -8,39 +8,25 @@ const max = require('lodash/max')
 const range = require('lodash/range')
 const reverse = require('lodash/reverse')
 
+const uniqueId = require('../util/unique-id')
 const Id = require('./id')
 const Entity = require('./entity')
 
-const uniqueId = require('../util/unique-id')
-const aboveOpenSpace = require('../util/above-open-space')
-
 const Entities = Tc.dict(Id, Entity)
 
-Entities.parse = function parseEntities (string) {
-  const lines = string.split('\n')
-  const height = lines.length
+Entities.generate = function generateEntities (generateFn) {
+  const size = [80, 25]
   const entities = {}
-  lines.forEach((line, lineNum) => {
-    const chars = line.split('')
-    chars.forEach((character, charNum) => {
-      const position = [charNum, height - lineNum - 1]
-      const entity = {
-        id: uniqueId(),
-        position,
-      character}
-      entities[entity.id] = entity
-
-      if (aboveOpenSpace(entity.character)) {
-        const openSpace = {
-          id: uniqueId,
-          position,
-          character: '.'
-        }
-        entities[openSpace.id] = openSpace
-      }
-    })
-  })
-  return Entities(entities)
+  for (var x = 0; x < size[0]; x++) {
+    for (var y = 0; y < size[1]; y++) {
+      const entity = generateFn(x, y)
+      const id = uniqueId()
+      entities[id] = Object.assign(
+        { id, position: [x, y] }, entity
+      )
+    }
+  }
+  return entities
 }
 
 Entities.stringify = function stringifyEntities (entities) {
