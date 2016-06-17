@@ -47,8 +47,8 @@ const server = {
     effect: [
       Serve({
         id: userId,
-        port: port,
-        server: httpServer
+        port,
+        httpServer
       }),
       Genesis({
         id: userId
