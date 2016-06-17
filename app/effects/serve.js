@@ -5,6 +5,7 @@ const Pushable = require('pull-pushable')
 const ws = require('pull-ws-server')
 const cat = require('pull-cat')
 const pullJson = require('pull-json-doubleline')
+const pullState = require('pull-state')
 
 const Id = require('../types/id')
 const actions = require('../actions')
@@ -24,11 +25,27 @@ Serve.prototype.run = function (streams) {
     console.error(err)
   })
 
+  // keep state of last model
+  var lastModel
+  pull(
+    streams.models(),
+    pull.drain((model) => lastModel = model)
+  )
+
   const wsServer = ws
   .createServer({ server: httpServer }, (client) => {
 
+    const prevModel = pullState()
     const server = {
-      source: streams.models(),
+      source: cat([
+        pull.values([Set({ model: lastModel })])
+        pull(
+          streams.models(),
+          pullPairs((a, b) => {
+
+          })
+
+      ]),
       sink: pull(
         pull.drain((action) => {
           const Type = actions[action.type]
