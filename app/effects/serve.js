@@ -5,9 +5,10 @@ const Pushable = require('pull-pushable')
 const ws = require('pull-ws-server')
 const cat = require('pull-cat')
 const pullJson = require('pull-json-doubleline')
-const pullState = require('pull-state')
+const pullPairs = require('pull-pairs')
 
 const Id = require('../types/id')
+const Action = require('../types/action')
 const actions = require('../actions')
 
 const Serve = Tc.struct({
@@ -16,7 +17,7 @@ const Serve = Tc.struct({
   id: Id
 }, 'Serve')
 
-Serve.prototype.run = function (streams) {
+Serve.prototype.run = function (sources) {
   const effect = this
   const { port, httpServer, id } = effect
 
@@ -25,27 +26,33 @@ Serve.prototype.run = function (streams) {
     console.error(err)
   })
 
-  // keep state of last model
-  var lastModel
-  pull(
-    streams.models(),
-    pull.drain((model) => lastModel = model)
-  )
-
   const wsServer = ws
   .createServer({ server: httpServer }, (client) => {
 
-    const prevModel = pullState()
+    pushable.push(actions.Join({ client }))
+
     const server = {
-      source: cat([
-        pull.values([Set({ model: lastModel })])
-        pull(
-          streams.models(),
-          pullPairs((a, b) => {
-
-          })
-
-      ]),
+      source: pull(
+        cat([
+          pull(
+            sources.models(),
+            pull.take(1),
+            pull.map((model) => actions.Set({ model }))
+          ),
+          pull(
+            sources.models(),
+            pullPairs((a, b) => {
+              if (a != null) {
+                return actions.Patch.diff(a, b)
+              }
+            })
+          )
+        ]),
+        pull.map((action) => {
+          const Type = Action.dispatch(action)
+          return assign({ type: Type.meta.name }, action)
+        })
+      ),
       sink: pull(
         pull.drain((action) => {
           const Type = actions[action.type]
@@ -58,10 +65,6 @@ Serve.prototype.run = function (streams) {
 
     pull(pullJson(client.source), server.sink)
     pull(server.source, pullJson(client.sink))
-
-    // push join after client connects
-    // to cause model to be updated
-    pushable.push(actions.Join({ client }))
   })
 
   if (!httpServer) {

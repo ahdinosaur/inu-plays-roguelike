@@ -6,6 +6,7 @@ const app = require('./')
 const Connect = require('./effects/connect')
 const Keys = require('./effects/keys')
 const Set = require('./actions/set')
+const Patch = require('./actions/patch')
 
 const wsUrl = process.env.NODE_ENV === 'production'
   ? getWsUrl('//')
@@ -23,7 +24,7 @@ const client = {
   }),
 
   update: (model, action) => {
-    if (Set.is(action)) {
+    if (Set.is(action) || Patch.is(action)) {
       return app.update(model, action)
     }
     // otherwise ignore action
