@@ -1,10 +1,8 @@
 const Tc = require('tcomb')
+const { values } = require('lodash')
 
-const Genesis = require('../effects/genesis')
-const Serve = require('../effects/serve')
-const Connect = require('../effects/connect')
-const Keys = require('../effects/keys')
+const effects = require('../effects')
 
-const Effect = Tc.union([Genesis, Serve, Connect, Keys], 'Effect')
+const Effect = Tc.union(values(effects), 'Effect')
 
 module.exports = Effect

@@ -1,7 +1,5 @@
 const Simplex = require('simplex-noise')
 
-const entities = require('../entities')
-
 const simplex = new Simplex()
 const Noise = simplex.noise2D.bind(simplex)
 
@@ -14,6 +12,7 @@ function plainTerrain (options) {
       noise > 0.8 ? 'wall'
       : noise > 0.4 ? 'grass'
       : 'dirt'
-    return entities[entityType]
+
+    return entityType
   }
 }

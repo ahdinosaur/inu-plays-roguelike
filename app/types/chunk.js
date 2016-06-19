@@ -3,10 +3,9 @@ const Tc = require('tcomb')
 const Id = require('./id')
 const Vector = require('./vector')
 
-const Entity = Tc.struct({
-  id: Id,
+const Chunk = Tc.struct({
   position: Vector,
-  entityType: Tc.String
+  entityIds: Tc.list(Id)
 })
 
-module.exports = Entity
+module.exports = Chunk

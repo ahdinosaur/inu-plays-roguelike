@@ -3,6 +3,7 @@ const map = require('lodash/map')
 const filter = require('lodash/filter')
 const includes = require('lodash/includes')
 
+const entityTypes = require('../entity-types')
 const atPosition = require('../util/at-position')
 const Id = require('../types/id')
 const Direction = require('../types/direction')
@@ -15,13 +16,17 @@ const Move = Tc.struct({
 
 Move.prototype.update = function moveUpdate (model) {
   const action = this
-  const entity = model.entities[action.id]
-  const newPosition = move(entity.position, action.direction)
+
+  const agent = model.entities[action.id]
+  const agentType = entityTypes[entity.entityType]
+  if (!agentType.agent) return { model }
+
+  const newPosition = move(agent.position, action.direction)
 
   // if collides with wall, ignore move
   const colliders = filter(
     atPosition(model.entities, newPosition),
-    (c) => !c.walkable
+    (c) => !entityTypes[c.entityType].walkable
   )
   if (colliders.length > 0) {
     return { model }

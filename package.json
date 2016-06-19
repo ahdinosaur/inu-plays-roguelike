@@ -67,6 +67,7 @@
     "pull-pushable": "^2.0.0",
     "pull-ws-server": "^1.9.2",
     "simplex-noise": "^2.2.0",
+    "t-ndarray": "^2.4.1",
     "tcomb": "^3.2.2",
     "uglifyify": "^3.0.1",
     "wsurl": "^1.0.0"

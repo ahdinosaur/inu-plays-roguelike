@@ -1,6 +1,7 @@
-const entities = {
-  you: {
-    character: '@'
+const entityTypes = {
+  agent: {
+    character: '@',
+    agent: true
   },
   dirt: {
     character: '.',
@@ -16,4 +17,4 @@ const entities = {
   }
 }
 
-module.exports = entities
+module.exports = entityTypes

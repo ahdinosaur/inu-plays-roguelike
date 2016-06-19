@@ -2,7 +2,7 @@ const pullMany = require('pull-many')
 
 const State = require('./types/state')
 const Action = require('./types/action')
-const Entities = require('./types/entities')
+const Model = require('./types/model')
 const Effect = require('./types/effect')
 
 const app = {
@@ -11,7 +11,7 @@ const app = {
   },
 
   view: (model, dispatch) => {
-    return Entities.stringify(model.entities)
+    return Model.stringify(model)
       + `players: ${model.players}`
   },
 
