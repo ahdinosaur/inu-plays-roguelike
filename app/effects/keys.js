@@ -13,7 +13,7 @@ const keyToDirection = {
   up: [0, 1]
 }
 
-Keys.prototype.run = function (actions) {
+Keys.prototype.run = function (sources) {
   const effect = this
 
   return pull(

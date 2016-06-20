@@ -63,8 +63,7 @@ Serve.prototype.run = function (sources) {
       )
     }
 
-    pull(pullJson(client.source), server.sink)
-    pull(server.source, pullJson(client.sink))
+    pull(client, pullJson(server), client)
   })
 
   if (!httpServer) {
