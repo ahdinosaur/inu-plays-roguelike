@@ -5,6 +5,8 @@ const reduce = require('lodash/reduce')
 const max = require('lodash/max')
 const range = require('lodash/range')
 const reverse = require('lodash/reverse')
+const Ndarray = require('t-ndarray')
+const { createSelector } = require('reselect')
 
 const Vector = require('./vector')
 const Entities = require('./entities')
@@ -12,29 +14,24 @@ const Chunk = require('./chunk')
 const entityTypes = require('../entity-types')
 
 const Model = Tc.struct({
-  center: Vector,
-  size: Vector,
   entities: Entities,
   chunks: Tc.list(Chunk),
+  center: Vector,
+  size: Vector,
   players: Tc.Number
 })
 
 Model.stringify = function stringifyEntities (model) {
-  const { center, size, entities } = model
+  const { entities, center, size } = model
+  const grid = getGrid(model)
   const strings = []
   reverse(range(center[1], size[1])).forEach((y) => {
-    const rowEntities = filter(
-      entities,
-      (entity) => entity.position[1] === y
-    )
     range(center[0], size[0]).forEach((x) => {
-      const cellEntities = filter(
-        rowEntities,
-        (entity) => entity.position[0] === x
-      )
+      const cellEntities = grid.get(x, y)
       if (cellEntities.length > 0) {
         const topEntity = reduce(cellEntities, (sofar, next) => {
-          if (sofar != null && next.character === '.') {
+          const nextEntityType = entityTypes[next.entityType]
+          if (sofar != null && nextEntityType.character === '.') {
             return sofar
           }
           return next
@@ -50,4 +47,47 @@ Model.stringify = function stringifyEntities (model) {
   return strings.join('')
 }
 
+const getEntities = (model) => model.entities
+const getCenter = (model) => model.center
+const getSize = (model) => model.size
+
+const getGrid = createSelector(
+  getEntities, getCenter, getSize,
+  (entities, center, size) => {
+    const grid = Ndarray({
+      data: new Array(size[0] * size[1]),
+      shape: size,
+      stride: [size[1], 1],
+      offset: 0
+    })
+
+    forEach(entities, entity => {
+      const pos = entity.position
+      if (
+        between(pos[0], center[0], center[0] + size[0])
+        && between(pos[1], center[1], center[1] + size[1])
+      ) {
+        pushToGrid(pos, entity)
+      }
+    })
+
+    function pushToGrid ([x, y], value) {
+      var cellEntities = grid.get(x, y)
+      if (!Array.isArray(cellEntities)) {
+        cellEntities = []
+      }
+      cellEntities.push(value)
+      grid.set(x, y, cellEntities)
+    }
+
+    return grid
+  }
+)
+
+Model.getGrid = getGrid
+
 module.exports = Model
+
+function between (value, min, max) {
+  return value >= min && value <= max
+}

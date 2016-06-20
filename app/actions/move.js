@@ -4,7 +4,6 @@ const filter = require('lodash/filter')
 const includes = require('lodash/includes')
 
 const entityTypes = require('../entity-types')
-const atPosition = require('../util/at-position')
 const Id = require('../types/id')
 const Direction = require('../types/direction')
 const Model = require('../types/model')
@@ -18,14 +17,15 @@ Move.prototype.update = function moveUpdate (model) {
   const action = this
 
   const agent = model.entities[action.id]
-  const agentType = entityTypes[entity.entityType]
+  const agentType = entityTypes[agent.entityType]
   if (!agentType.agent) return { model }
 
   const newPosition = move(agent.position, action.direction)
 
   // if collides with wall, ignore move
+  const grid = Model.getGrid(model)
   const colliders = filter(
-    atPosition(model.entities, newPosition),
+    grid.get(...newPosition),
     (c) => !entityTypes[c.entityType].walkable
   )
   if (colliders.length > 0) {
