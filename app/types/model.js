@@ -10,11 +10,11 @@ const { createSelector } = require('reselect')
 
 const Vector = require('./vector')
 const Entities = require('./entities')
-const Chunk = require('./chunk')
+const Chunks = require('./chunks')
 
 const Model = Tc.struct({
   entities: Entities,
-  chunks: Tc.list(Chunk),
+  chunks: Chunks,
   center: Vector,
   size: Vector,
   players: Tc.Number

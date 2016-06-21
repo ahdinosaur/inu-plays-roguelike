@@ -8,3 +8,7 @@ const Chunk = Tc.struct({
 })
 
 module.exports = Chunk
+
+Chunk.getId = function getChunkId (chunk) {
+  return chunk.position.join('|')
+}

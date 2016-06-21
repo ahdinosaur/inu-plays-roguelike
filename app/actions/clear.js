@@ -2,16 +2,16 @@ const Tc = require('tcomb')
 const { keys } = require('lodash')
 
 const Vector = require('../types/vector')
-const Entities = require('../types/entities')
+const Id = require('../types/id')
 const Chunk = require('../types/chunk')
 const Model = require('../types/model')
 
-const Generate = Tc.struct({
+const Clear = Tc.struct({
   chunkPosition: Vector,
-  entities: Entities
-}, 'Generate')
+  entityIds: Tc.list(Id)
+}, 'Clear')
 
-Generate.prototype.update = function generateUpdate (model) {
+Clear.prototype.update = function generateUpdate (model) {
   const action = this
 
   const chunk = Chunk({
@@ -20,11 +20,11 @@ Generate.prototype.update = function generateUpdate (model) {
   const chunkId = Chunk.getId(chunk)
 
   const newModel = Model.update(model, {
-    entities: { $merge: action.entities },
-    chunks: { [chunkId]: { $set: chunk } }
+    entities: { $remove: [action.entityIds] },
+    chunks: { $remove: [chunkId] }
   })
 
   return { model: newModel }
 }
 
-module.exports = Generate
+module.exports = Clear

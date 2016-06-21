@@ -1,5 +1,6 @@
 module.exports = {
   Generate: require('./generate'),
+  Clear: require('./clear'),
   Propose: require('./propose'),
   Execute: require('./execute'),
   Create: require('./create'),

@@ -36,7 +36,7 @@ const server = {
     return {
       model: {
         entities: {},
-        chunks: [],
+        chunks: {},
         center: [0, 0],
         size: [128, 32],
         players: 0
