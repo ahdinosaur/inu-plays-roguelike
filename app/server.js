@@ -14,7 +14,6 @@ const World = require('./effects/world')
 const Agent = require('./effects/agent')
 const Set = require('./actions/set')
 const terrain = require('./terrain/plain')
-const entityTypes = require('./entity-types')
 
 const userId = uniqueId()
 
@@ -34,25 +33,12 @@ if (isProd) {
 
 const server = {
   init: () => {
-    const generator = terrain()
-    const entities = World.generateChunk(generator, [0, 0])
-    const chunk = {
-      position: [0, 0]
-    }
-    const size = [World.chunkSize[0], World.chunkSize[1] / 4]
-    const user = Object.assign({}, entityTypes.user, {
-      id: userId,
-      position: [size[0] / 2, size[1] / 2]
-    })
-
     return {
       model: {
-        entities: Object.assign({}, entities, {
-          [userId]: user
-        }),
-        //chunks: [chunk],
-        center: [size[0] / 2, size[1] / 2],
-        size: size,
+        entities: {},
+        chunks: [],
+        center: [0, 0],
+        size: [128, 32],
         players: 0
       },
       effect: [
@@ -61,7 +47,9 @@ const server = {
           port,
           httpServer
         }),
-        World({}),
+        World({
+          generate: terrain()
+        }),
         Agent({
           id: userId
         })
@@ -74,15 +62,3 @@ const server = {
 }
 
 const streams = start(server)
-
-pull(
-  streams.actions(),
-  pull.log()
-)
-
-/*
-pull(
-  streams.views(),
-  pull.log()
-)
-*/

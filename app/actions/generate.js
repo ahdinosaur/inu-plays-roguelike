@@ -11,18 +11,19 @@ const Generate = Tc.struct({
   entities: Entities
 }, 'Generate')
 
-Generate.prototype.update = function moveUpdate (model) {
+Generate.prototype.update = function generateUpdate (model) {
   const action = this
 
   const chunk = Chunk({
-    position: action.chunkPosition,
-    entityIds: keys(action.entities)
+    position: action.chunkPosition
   })
 
-  return Model.update(model, {
+  const newModel = Model.update(model, {
     entities: { $merge: action.entities },
-    chunks: { $push: chunk }
+    chunks: { $push: [chunk] }
   })
+
+  return { model: newModel }
 }
 
 module.exports = Generate

@@ -14,7 +14,7 @@ const Chunk = require('./chunk')
 
 const Model = Tc.struct({
   entities: Entities,
-  //chunks: Tc.list(Chunk),
+  chunks: Tc.list(Chunk),
   center: Vector,
   size: Vector,
   players: Tc.Number

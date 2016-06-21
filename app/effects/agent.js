@@ -4,9 +4,12 @@ const { assign } = require('lodash')
 const pullThrough = require('pull-through')
 const pullMany = require('pull-many')
 
+const entityTypes = require('../entity-types')
+
 const Model = require('../types/model')
 const Action = require('../types/action')
 const See = require('../actions/see')
+const Create = require('../actions/create')
 const Propose = require('../actions/propose')
 const Id = require('../types/id')
 
@@ -18,6 +21,17 @@ Agent.prototype.run = function (sources) {
   const { id } = this
 
   return pullMany([
+    // create agent on center
+    pull(
+      sources.models(),
+      pull.take(1),
+      pull.map(model => {
+        return Create(assign({
+          id,
+          position: model.center
+        }, entityTypes.agent))
+      })
+    ),
     // execute proposals
     pull(
       sources.actions(),
@@ -32,6 +46,7 @@ Agent.prototype.run = function (sources) {
     pull(
       sources.models(),
       pull.map(model => model.entities[id]),
+      pull.filter(),
       pull.map(agent => agent.position),
       difference(),
       pull.map(position => {

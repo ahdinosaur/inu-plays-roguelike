@@ -1,5 +1,5 @@
 const entityTypes = {
-  user: {
+  agent: {
     character: {
       code: '@'
     },
