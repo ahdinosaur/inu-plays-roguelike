@@ -5,8 +5,7 @@ const getWsUrl = require('wsurl')
 const app = require('./')
 const Connect = require('./effects/connect')
 const Keys = require('./effects/keys')
-const Set = require('./actions/set')
-const Patch = require('./actions/patch')
+const actions = require('./actions')
 
 const wsUrl = process.env.NODE_ENV === 'production'
   ? getWsUrl('//')
@@ -19,12 +18,12 @@ const client = {
       Connect({
         url: wsUrl
       }),
-      Keys({})
+      Keys({}),
     ]
   }),
 
   update: (model, action) => {
-    if (Set.is(action) || Patch.is(action)) {
+    if (actions.Set.is(action) || actions.Execute.is(action)) {
       return app.update(model, action)
     }
     // otherwise ignore action

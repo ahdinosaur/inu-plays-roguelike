@@ -22,9 +22,8 @@ Connect.prototype.run = function runConnect (sources) {
     const client = {
       source: pull(
         sources.actions(),
-        pull.filterNot((action) => {
-          return actions.Set.is(action) || actions.Patch.is(action)
-        }),
+        pull.filterNot(actions.Set.is),
+        pull.filterNot(actions.Execute.is),
         pull.map((action) => {
           const Type = Action.dispatch(action)
           return assign({ type: Type.meta.name }, action)
@@ -32,7 +31,9 @@ Connect.prototype.run = function runConnect (sources) {
       ),
       through: pull.map((action) => {
         const Type = actions[action.type]
-        return Type(action)
+        return actions.Execute({
+          action: Type(action)
+        })
       })
     }
 

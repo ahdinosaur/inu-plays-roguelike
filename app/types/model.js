@@ -11,11 +11,10 @@ const { createSelector } = require('reselect')
 const Vector = require('./vector')
 const Entities = require('./entities')
 const Chunk = require('./chunk')
-const entityTypes = require('../entity-types')
 
 const Model = Tc.struct({
   entities: Entities,
-  chunks: Tc.list(Chunk),
+  //chunks: Tc.list(Chunk),
   center: Vector,
   size: Vector,
   players: Tc.Number
@@ -30,14 +29,12 @@ Model.stringify = function stringifyEntities (model) {
       const cellEntities = grid.get(x, y)
       if (cellEntities.length > 0) {
         const topEntity = reduce(cellEntities, (sofar, next) => {
-          const nextEntityType = entityTypes[next.entityType]
-          if (sofar != null && nextEntityType.character === '.') {
+          if (sofar != null && next.character.code === '.') {
             return sofar
           }
           return next
         })
-        const topEntityType = entityTypes[topEntity.entityType]
-        strings.push(topEntityType.character)
+        strings.push(topEntity.character.code)
       } else {
         strings.push(' ')
       }

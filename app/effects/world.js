@@ -3,6 +3,7 @@ const { pull } = require('inu')
 const Ndarray = require('t-ndarray')
 const { find } = require('lodash')
 
+const entityTypes = require('../entity-types')
 const uniqueId = require('../util/unique-id')
 const Id = require('../types/id')
 const Create = require('../actions/create')
@@ -59,10 +60,14 @@ function generateChunk (generateFn, chunkPosition) {
     for (var y = minY; y < chunkSize[1]; y++) {
       const entityType = generateFn(x, y)
       const id = uniqueId()
-      entities[id] = {
-        id, entityType,
-        position: [x, y]
-      }
+      entities[id] = Object.assign(
+        {},
+        entityTypes[entityType],
+        {
+          id,
+          position: [x, y]
+        }
+      )
     }
   }
   return entities

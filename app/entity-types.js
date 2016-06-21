@@ -1,19 +1,27 @@
 const entityTypes = {
-  agent: {
-    character: '@',
+  user: {
+    character: {
+      code: '@'
+    },
     agent: true
   },
   dirt: {
-    character: '.',
+    character: {
+      code: '.'
+    },
     open: true,
     walkable: true
   },
   grass: {
-    character: '#',
+    character: {
+      code: '#'
+    },
     walkable: true
   },
   wall: {
-    character: '|'
+    character: {
+      code: '|'
+    }
   }
 }
 

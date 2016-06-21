@@ -11,6 +11,7 @@ const State = require('./types/state')
 const Action = require('./types/action')
 const Serve = require('./effects/serve')
 const World = require('./effects/world')
+const Agent = require('./effects/agent')
 const Set = require('./actions/set')
 const terrain = require('./terrain/plain')
 const entityTypes = require('./entity-types')
@@ -40,21 +41,17 @@ const server = {
       entityIds: keys(entities)
     }
     const size = [World.chunkSize[0], World.chunkSize[1] / 4]
-    const user = {
+    const user = Object.assign({}, entityTypes.user, {
       id: userId,
-      entityType: 'agent',
       position: [size[0] / 2, size[1] / 2]
-    }
-
-    console.log('entities', JSON.stringify(Object.assign(entities, {}, { [userId]: user }), null, 2).slice(0, 100))
+    })
 
     return {
       model: {
-        entityTypes,
         entities: Object.assign({}, entities, {
           [userId]: user
         }),
-        chunks: [chunk],
+        //chunks: [chunk],
         center: [0, 0],
         size: [World.chunkSize[0], World.chunkSize[1] / 4],
         players: 0
@@ -65,7 +62,10 @@ const server = {
           port,
           httpServer
         }),
-        World({})
+        World({}),
+        Agent({
+          id: userId
+        })
       ]
     }
   },

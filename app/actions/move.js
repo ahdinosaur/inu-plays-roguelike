@@ -3,7 +3,6 @@ const map = require('lodash/map')
 const filter = require('lodash/filter')
 const includes = require('lodash/includes')
 
-const entityTypes = require('../entity-types')
 const Id = require('../types/id')
 const Direction = require('../types/direction')
 const Model = require('../types/model')
@@ -17,8 +16,7 @@ Move.prototype.update = function moveUpdate (model) {
   const action = this
 
   const agent = model.entities[action.id]
-  const agentType = entityTypes[agent.entityType]
-  if (!agentType.agent) return { model }
+  if (!agent.agent) return { model }
 
   const newPosition = move(agent.position, action.direction)
 
@@ -26,7 +24,7 @@ Move.prototype.update = function moveUpdate (model) {
   const grid = Model.getGrid(model)
   const colliders = filter(
     grid.get(...newPosition),
-    (c) => !entityTypes[c.entityType].walkable
+    (c) => !c.walkable
   )
   if (colliders.length > 0) {
     return { model }

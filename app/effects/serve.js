@@ -5,21 +5,19 @@ const Pushable = require('pull-pushable')
 const ws = require('pull-ws-server')
 const cat = require('pull-cat')
 const pullJson = require('pull-json-doubleline')
-const pullPairs = require('pull-pairs')
 
-const Id = require('../types/id')
 const Action = require('../types/action')
 const actions = require('../actions')
+const Propose = require('../actions/propose')
 
 const Serve = Tc.struct({
   port: Tc.Number,
-  httpServer: Tc.maybe(Tc.Object),
-  id: Id
+  httpServer: Tc.maybe(Tc.Object)
 }, 'Serve')
 
 Serve.prototype.run = function (sources) {
   const effect = this
-  const { port, httpServer, id } = effect
+  const { port, httpServer } = effect
 
   const pushable = Pushable((err) => {
     console.log('closing server')
@@ -40,12 +38,9 @@ Serve.prototype.run = function (sources) {
             pull.map((model) => actions.Set({ model }))
           ),
           pull(
-            sources.models(),
-            pullPairs((a, b) => {
-              if (a != null) {
-                return actions.Patch.diff(a, b)
-              }
-            })
+            sources.actions(),
+            pull.filter(actions.Execute.is),
+            pull.map((action) => action.action)
           )
         ]),
         pull.map((action) => {
@@ -56,7 +51,11 @@ Serve.prototype.run = function (sources) {
       sink: pull(
         pull.drain((action) => {
           const Type = actions[action.type]
-          pushable.push(Type(assign(action, { id })))
+          console.log('type', Type, action)
+          const proposal = Propose({
+            action: Type(action)
+          })
+          pushable.push(proposal)
         }, (err) => {
           pushable.push(actions.Part({ client }))
         })
