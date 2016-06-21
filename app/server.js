@@ -37,8 +37,7 @@ const server = {
     const generator = terrain()
     const entities = World.generateChunk(generator, [0, 0])
     const chunk = {
-      position: [0, 0],
-      entityIds: keys(entities)
+      position: [0, 0]
     }
     const size = [World.chunkSize[0], World.chunkSize[1] / 4]
     const user = Object.assign({}, entityTypes.user, {
@@ -52,8 +51,8 @@ const server = {
           [userId]: user
         }),
         //chunks: [chunk],
-        center: [0, 0],
-        size: [World.chunkSize[0], World.chunkSize[1] / 4],
+        center: [size[0] / 2, size[1] / 2],
+        size: size,
         players: 0
       },
       effect: [

@@ -2,9 +2,7 @@ const Tc = require('tcomb')
 
 const Model = require('../types/model')
 
-const Join = Tc.struct({
-  client: Tc.Object
-}, 'Join')
+const Join = Tc.struct({}, 'Join')
 
 Join.prototype.update = function joinUpdate (model) {
   const newModel = Model.update(model, {

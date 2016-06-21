@@ -27,7 +27,7 @@ Serve.prototype.run = function (sources) {
   const wsServer = ws
   .createServer({ server: httpServer }, (client) => {
 
-    pushable.push(actions.Join({ client }))
+    pushable.push(actions.Join({}))
 
     const server = {
       source: pull(
@@ -39,8 +39,7 @@ Serve.prototype.run = function (sources) {
           ),
           pull(
             sources.actions(),
-            pull.filter(actions.Execute.is),
-            pull.map((action) => action.action)
+            pull.filterNot(Propose.is)
           )
         ]),
         pull.map((action) => {
@@ -51,13 +50,12 @@ Serve.prototype.run = function (sources) {
       sink: pull(
         pull.drain((action) => {
           const Type = actions[action.type]
-          console.log('type', Type, action)
           const proposal = Propose({
             action: Type(action)
           })
           pushable.push(proposal)
         }, (err) => {
-          pushable.push(actions.Part({ client }))
+          pushable.push(actions.Part({}))
         })
       )
     }

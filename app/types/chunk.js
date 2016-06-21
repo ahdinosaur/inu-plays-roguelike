@@ -4,8 +4,7 @@ const Id = require('./id')
 const Vector = require('./vector')
 
 const Chunk = Tc.struct({
-  position: Vector,
-  entityIds: Tc.list(Id)
+  position: Vector
 })
 
 module.exports = Chunk

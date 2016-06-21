@@ -24,10 +24,14 @@ Model.stringify = function stringifyEntities (model) {
   const { entities, center, size } = model
   const grid = getGrid(model)
   const strings = []
-  reverse(range(center[1], size[1])).forEach((y) => {
-    range(center[0], size[0]).forEach((x) => {
+
+  const min = [center[0] - size[0] / 2, center[1] - size[1] / 2]
+  const max = [center[0] + size[0] / 2, center[1] + size[1] / 2]
+
+  reverse(range(min[1], max[1])).forEach((y) => {
+    range(min[0], max[0]).forEach((x) => {
       const cellEntities = grid.get(x, y)
-      if (cellEntities.length > 0) {
+      if (cellEntities != null && cellEntities.length > 0) {
         const topEntity = reduce(cellEntities, (sofar, next) => {
           if (sofar != null && next.character.code === '.') {
             return sofar
@@ -58,11 +62,14 @@ const getGrid = createSelector(
       offset: 0
     })
 
+    const min = [center[0] - size[0] / 2, center[1] - size[1] / 2]
+    const max = [center[0] + size[0] / 2, center[1] + size[1] / 2]
+
     forEach(entities, entity => {
       const pos = entity.position
       if (
-        between(pos[0], center[0], center[0] + size[0])
-        && between(pos[1], center[1], center[1] + size[1])
+        between(pos[0], min[0], max[0])
+        && between(pos[1], min[1], max[1])
       ) {
         pushToGrid(pos, entity)
       }
@@ -86,5 +93,5 @@ Model.getGrid = getGrid
 module.exports = Model
 
 function between (value, min, max) {
-  return value >= min && value <= max
+  return value >= min && value < max
 }
