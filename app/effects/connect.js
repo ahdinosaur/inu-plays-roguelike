@@ -1,4 +1,4 @@
-const Tc = require('tcomb')
+const ty = require('mintype')
 const { pull } = require('inu')
 const { assign } = require('lodash')
 const ws = require('pull-ws-server')
@@ -9,8 +9,8 @@ const pullNext = require('pull-next')
 const actions = require('../actions')
 const Action = require('../types/action')
 
-const Connect = Tc.struct({
-  url: Tc.String
+const Connect = ty.struct('Connect', {
+  url: ty.String
 })
 
 Connect.prototype.run = function runConnect (sources) {
@@ -22,15 +22,13 @@ Connect.prototype.run = function runConnect (sources) {
     const client = {
       source: pull(
         sources.actions(),
-        pull.filterNot(actions.Execute.is),
-        pull.map((action) => {
-          const Type = Action.dispatch(action)
-          return assign({ type: Type.meta.name }, action)
+        pull.filterNot((action) => {
+          return action.type === 'Execute'
         })
       ),
       through: pull.map((action) => {
         const Type = actions[action.type]
-        return actions.Execute({
+        return ty.create(actions.Execute, {
           action: Type(action)
         })
       })

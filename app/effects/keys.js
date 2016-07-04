@@ -1,10 +1,10 @@
-const Tc = require('tcomb')
+const ty = require('mintype')
 const { pull } = require('inu')
 const pullKeys = require('pull-keys')
 
 const Move = require('../actions/move')
 
-const Keys = Tc.struct({}, 'Keys')
+const Keys = ty.struct('Keys', {})
 
 const keyToDirection = {
   left: [-1, 0],
@@ -24,7 +24,7 @@ Keys.prototype.run = function (sources) {
       up: true
     }),
     pull.map((key) => {
-      return Move({
+      return ty.create(Move, {
         direction: keyToDirection[key]
       })
     })

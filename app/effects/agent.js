@@ -1,4 +1,4 @@
-const Tc = require('tcomb')
+const ty = require('mintype')
 const { pull } = require('inu')
 const { assign } = require('lodash')
 const pullThrough = require('pull-through')
@@ -10,12 +10,11 @@ const Model = require('../types/model')
 const Action = require('../types/action')
 const See = require('../actions/see')
 const Create = require('../actions/create')
-const Propose = require('../actions/propose')
 const Id = require('../types/id')
 
-const Agent = Tc.struct({
+const Agent = ty.struct('Agent', {
   id: Id
-}, 'Agent')
+})
 
 Agent.prototype.run = function (sources) {
   const { id } = this
@@ -26,20 +25,22 @@ Agent.prototype.run = function (sources) {
       sources.models(),
       pull.take(1),
       pull.map(model => {
-        return Create(assign({
-          id,
-          position: model.center
-        }, entityTypes.agent))
+        return ty.create(Create, {
+          entity: assign({
+            id,
+            position: model.center
+          }, entityTypes.agent)
+        })
       })
     ),
     // execute proposals
     pull(
       sources.actions(),
-      pull.filter(action => Propose.is(action)),
+      pull.filter(action => action.type === 'Propose'),
       pull.map(proposal => {
         const { action } = proposal
         const ActionType = Action.dispatch(action)
-        return ActionType(assign({}, action, { id }))
+        return ty.create(ActionType, assign({}, action, { id }))
       })
     ),
     // keep seeing agent position
@@ -50,7 +51,7 @@ Agent.prototype.run = function (sources) {
       pull.map(agent => agent.position),
       difference(),
       pull.map(position => {
-        return See({
+        return ty.create(See, {
           center: position
         })
       })

@@ -1,14 +1,15 @@
-const Tc = require('tcomb')
+const ty = require('mintype')
+const assign = require('lodash/assign')
 
 const Model = require('../types/model')
 
-const Join = Tc.struct({}, 'Join')
+const Join = ty.struct('Join', {})
 
 Join.prototype.update = function joinUpdate (model) {
-  const newModel = Model.update(model, {
-    players: { $set: model.players + 1 }
+  const newModel = assign({}, model, {
+    players: model.players + 1
   })
-  return { model: newModel }
+  return { model: ty.create(Model, newModel) }
 }
 
 module.exports = Join

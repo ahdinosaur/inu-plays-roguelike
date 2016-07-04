@@ -1,5 +1,5 @@
+const ty = require('mintype')
 const { start, pull, html } = require('inu')
-const Tc = require('tcomb')
 const getWsUrl = require('wsurl')
 
 const app = require('./')
@@ -23,7 +23,7 @@ const client = {
   }),
 
   update: (model, action) => {
-    if (actions.Set.is(action) || actions.Execute.is(action)) {
+    if (action.type === 'Set' || action.type === 'Execute') {
       return app.update(model, action)
     }
     // otherwise ignore action

@@ -1,14 +1,15 @@
-const Tc = require('tcomb')
-const map = require('lodash/map')
-const sum = require('lodash/sum')
+const ty = require('mintype')
+const assert = require('assert')
 
 const Vector = require('./vector')
 
 // a direction is a unit vector
-const Direction = Tc.refinement(
+const Direction = ty.compose(
   Vector,
-  (l) => sum(map(l, Math.abs)) === 1,
-  'Direction'
+  (vector) => {
+    return Math.abs(vector[0]) + Math.abs(vector[1]) === 1
+      ? vector : new TypeError('Direction must be a unit vector (Math.abs(x) + Math.abs(y) === 1)')
+  }
 )
 
 module.exports = Direction

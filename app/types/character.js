@@ -1,16 +1,14 @@
-const Tc = require('tcomb')
-const Color = require('t-color')
+const Ty = require('mintype')
 
 // a code is a string with length 1
-const Code = Tc.refinement(
-  Tc.String,
-  (s) => s.length == 1,
-  'Code'
+const Code = Ty.compose(
+  Ty.String,
+  (s) => s.length == 1 ? s
+    : new TypeError('Code must be 1 character long.')
 )
 
-const Character = Tc.struct({
-  code: Code,
-  color: Tc.maybe(Color)
+const Character = Ty.struct('Character', {
+  code: Code
 })
 
 module.exports = Character

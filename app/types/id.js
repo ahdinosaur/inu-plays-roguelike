@@ -1,5 +1,3 @@
-const Tc = require('tcomb')
+const ty = require('mintype')
 
-const Id = Tc.String
-
-module.exports = Id
+module.exports = ty.String

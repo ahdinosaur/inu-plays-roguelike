@@ -1,17 +1,18 @@
-const Tc = require('tcomb')
-const { keys } = require('lodash')
+const ty = require('mintype')
+const { assign, omit } = require('lodash')
+const list = require('../util/list')
 
 const Vector = require('../types/vector')
 const Id = require('../types/id')
 const Chunk = require('../types/chunk')
 const Model = require('../types/model')
 
-const Clear = Tc.struct({
+const Clear = ty.struct('Clear', {
   chunkPosition: Vector,
-  entityIds: Tc.list(Id)
-}, 'Clear')
+  entityIds: list(Id)
+})
 
-Clear.prototype.update = function generateUpdate (model) {
+Clear.prototype.update = function clearUpdate (model) {
   const action = this
 
   const chunk = Chunk({
@@ -19,12 +20,12 @@ Clear.prototype.update = function generateUpdate (model) {
   })
   const chunkId = Chunk.getId(chunk)
 
-  const newModel = Model.update(model, {
-    entities: { $remove: [action.entityIds] },
-    chunks: { $remove: [chunkId] }
+  const newModel = assign({}, model, {
+    entities: omit(model.entities, action.entityIds),
+    chunks: omit(model.chunks, chunkId)
   })
 
-  return { model: newModel }
+  return { model: ty.create(Model, newModel) }
 }
 
 module.exports = Clear

@@ -1,6 +1,5 @@
-const Tc = require('tcomb')
+const ty = require('mintype')
 const { pull } = require('inu')
-const Ndarray = require('t-ndarray')
 const { assign, forEach, map, filter, find } = require('lodash')
 const pullThrough = require('pull-through')
 
@@ -14,9 +13,9 @@ const Chunk = require('../types/chunk')
 const Chunks = require('../types/chunks')
 const Model = require('../types/model')
 
-const World = Tc.struct({
-  generate: Tc.Function
-}, 'World')
+const World = ty.struct('World', {
+  generate: ty.Function
+})
 
 const chunkSize = [64, 64]
 const addChunkDistance = 1
@@ -42,7 +41,7 @@ World.prototype.run = function (sources) {
 
       const haveChunks = map(
         nearby(chunkPosition, addChunkDistance),
-        (position) => Chunk({ position })
+        (position) => ty.create(Chunk, { position })
       )
       const addChunks = filter(
         haveChunks,
@@ -52,7 +51,7 @@ World.prototype.run = function (sources) {
       const removeChunks = filter(
         map(
           nearby(chunkPosition, removeChunkDistance),
-          (position) => Chunk({ position })
+          (position) => ty.create(Chunk, { position })
         ),
         (chunk) => {
           return Chunks.has(model.chunks, chunk)
@@ -68,13 +67,13 @@ World.prototype.run = function (sources) {
     pullThrough(function ([model, changes]) {
       const queue = this.queue
       forEach(changes.add, (chunk) => {
-        queue(Generate({
+        queue(ty.create(Generate, {
           chunkPosition: chunk.position,
           entities: generateChunk(generate, chunk.position)
         }))
       })
       forEach(changes.remove, (chunk) => {
-        queue(Clear({
+        queue(ty.create(Clear, {
           chunkPosition: chunk.position,
           entityIds: clearChunk(model, chunk.position)
         }))

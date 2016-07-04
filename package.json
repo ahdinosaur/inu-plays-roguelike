@@ -56,6 +56,8 @@
     "envify": "^3.4.0",
     "inu": "github:ahdinosaur/inu#run-all-streams",
     "lodash": "^4.13.1",
+    "mintype": "^1.2.3",
+    "ndarray": "^1.0.18",
     "npm-run-all": "^1.6.0",
     "pull-cat": "^1.1.9",
     "pull-json-doubleline": "github:ahdinosaur/pull-json-doubleline#v2",
@@ -66,9 +68,6 @@
     "pull-ws-server": "^1.9.2",
     "reselect": "^2.5.1",
     "simplex-noise": "^2.2.0",
-    "t-color": "^2.0.1",
-    "t-ndarray": "^2.4.1",
-    "tcomb": "^3.2.2",
     "uglifyify": "^3.0.1",
     "wsurl": "^1.0.0"
   }

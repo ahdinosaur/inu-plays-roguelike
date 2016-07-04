@@ -1,16 +1,19 @@
-const Tc = require('tcomb')
+const ty = require('mintype')
+const assign = require('lodash/assign')
 const map = require('lodash/map')
 const filter = require('lodash/filter')
 const includes = require('lodash/includes')
+const maybe = require('../util/maybe')
 
 const Id = require('../types/id')
 const Direction = require('../types/direction')
+const Entity = require('../types/entity')
 const Model = require('../types/model')
 
-const Move = Tc.struct({
-  id: Tc.maybe(Id),
+const Move = ty.struct('Move', {
+  id: maybe(Id),
   direction: Direction
-}, 'Move')
+})
 
 Move.prototype.update = function moveUpdate (model) {
   const action = this
@@ -29,11 +32,17 @@ Move.prototype.update = function moveUpdate (model) {
   if (colliders.length > 0) {
     return { model }
   }
-
-  const newModel = Model.update(model, {
-    entities: { [action.id]: { position: { $set: newPosition } } }
+  
+  const oldEntity = model.entities[action.id]
+  const newEntity = assign({}, oldEntity, {
+    position: newPosition
   })
-  return { model: newModel }
+  const newModel = assign({}, model, {
+    entities: assign({}, model.entities, {
+      [action.id]: ty.create(Entity, newEntity)
+    })
+  })
+  return { model: ty.create(Model, newModel) }
 }
 
 module.exports = Move

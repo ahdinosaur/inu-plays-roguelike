@@ -1,23 +1,17 @@
-const Tc = require('tcomb')
+const ty = require('mintype')
+const defaultProp = require('../util/default')
 
 const Id = require('./id')
 const Vector = require('./vector')
 const Character = require('./character')
 
-const Entity = Tc.struct({
+const Entity = ty.struct('Entity', {
   id: Id,
   position: Vector,
   character: Character,
-  agent: Tc.Boolean,
-  open: Tc.Boolean,
-  walkable: Tc.Boolean
-}, {
-  name: 'EntityType',
-  defaultProps: {
-    agent: false,
-    open: false,
-    walkable: false
-  }
+  agent: ty.compose(defaultProp(false), ty.Boolean),
+  open: ty.compose(defaultProp(false), ty.Boolean),
+  walkable: ty.compose(defaultProp(false), ty.Boolean)
 })
 
 module.exports = Entity

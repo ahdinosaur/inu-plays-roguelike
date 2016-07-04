@@ -1,9 +1,7 @@
-const Tc = require('tcomb')
-
-const Id = require('./id')
+const ty = require('mintype')
 const Vector = require('./vector')
 
-const Chunk = Tc.struct({
+const Chunk = ty.struct('Chunk', {
   position: Vector
 })
 

@@ -1,12 +1,13 @@
-const Tc = require('tcomb')
+const ty = require('mintype')
+const declare = require('../util/declare')
 
-const Propose = Tc.declare('Propose')
+const Propose = declare()
 
 module.exports = Propose
 
 const Action = require('../types/action')
 
-Propose.define(Tc.struct({
+Propose.define(ty.struct('Propose', {
   action: Action
 }))
 

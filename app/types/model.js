@@ -1,23 +1,23 @@
-const Tc = require('tcomb')
+const ty = require('mintype')
 const forEach = require('lodash/forEach')
 const filter = require('lodash/filter')
 const reduce = require('lodash/reduce')
 const max = require('lodash/max')
 const range = require('lodash/range')
 const reverse = require('lodash/reverse')
-const Ndarray = require('t-ndarray')
+const Ndarray = require('ndarray')
 const { createSelector } = require('reselect')
 
 const Vector = require('./vector')
-const Entities = require('./entities')
 const Chunks = require('./chunks')
+const Entities = require('./entities')
 
-const Model = Tc.struct({
+const Model = ty.struct('Model', {
   entities: Entities,
   chunks: Chunks,
   center: Vector,
   size: Vector,
-  players: Tc.Number
+  players: ty.Number
 })
 
 Model.stringify = function stringifyEntities (model) {
@@ -55,12 +55,7 @@ const getSize = (model) => model.size
 const getGrid = createSelector(
   getEntities, getCenter, getSize,
   (entities, center, size) => {
-    const grid = Ndarray({
-      data: new Array(size[0] * size[1]),
-      shape: size,
-      stride: [size[1], 1],
-      offset: 0
-    })
+    const grid = Ndarray(new Array(size[0] * size[1]), size)
 
     const min = [center[0] - size[0] / 2, center[1] - size[1] / 2]
     const max = [center[0] + size[0] / 2, center[1] + size[1] / 2]

@@ -1,8 +1,10 @@
-const Tc = require('tcomb')
-const { values } = require('lodash')
+const declare = require('../util/declare')
+const union = require('../util/union')
+
+const Effect = declare()
+
+module.exports = Effect
 
 const effects = require('../effects')
 
-const Effect = Tc.union(values(effects), 'Effect')
-
-module.exports = Effect
+Effect.define(union(effects))

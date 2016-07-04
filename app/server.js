@@ -1,5 +1,4 @@
 const { start, pull } = require('inu')
-const Tc = require('tcomb')
 const pullMany = require('pull-many')
 const { keys } = require('lodash')
 

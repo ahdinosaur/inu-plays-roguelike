@@ -1,4 +1,4 @@
-const Tc = require('tcomb')
+const ty = require('mintype')
 const { pull } = require('inu')
 const { assign } = require('lodash')
 const Pushable = require('pull-pushable')
@@ -6,14 +6,14 @@ const ws = require('pull-ws-server')
 const cat = require('pull-cat')
 const pullJson = require('pull-json-doubleline')
 
+const maybe = require('../util/maybe')
 const Action = require('../types/action')
 const actions = require('../actions')
-const Propose = require('../actions/propose')
 
-const Serve = Tc.struct({
-  port: Tc.Number,
-  httpServer: Tc.maybe(Tc.Object)
-}, 'Serve')
+const Serve = ty.struct('Serve', {
+  port: ty.Number,
+  httpServer: maybe(ty.Object)
+})
 
 Serve.prototype.run = function (sources) {
   const effect = this
@@ -30,34 +30,27 @@ Serve.prototype.run = function (sources) {
     pushable.push(actions.Join({}))
 
     const server = {
-      source: pull(
-        cat([
-          pull(
-            sources.models(),
-            pull.take(1),
-            pull.map((model) => actions.Set({ model }))
-          ),
-          pull(
-            sources.actions(),
-            pull.filterNot(Propose.is)
-          )
-        ]),
-        pull.map((action) => {
-          const Type = Action.dispatch(action)
-          return assign({ type: Type.meta.name }, action)
-        })
-      ),
-      sink: pull(
-        pull.drain((action) => {
-          const Type = actions[action.type]
-          const proposal = Propose({
-            action: Type(action)
+      source: cat([
+        pull(
+          sources.models(),
+          pull.take(1),
+          pull.map((model) => ty.create(actions.Set, { model }))
+        ),
+        pull(
+          sources.actions(),
+          pull.filterNot((action) => {
+            return action.type === 'Propose'
           })
-          pushable.push(proposal)
-        }, (err) => {
-          pushable.push(actions.Part({}))
-        })
-      )
+        )
+      ]),
+      sink: pull.drain((action) => {
+        const Type = Action.dispatch(action)
+        pushable.push(ty.create(actions.Propose, {
+          action: Type(action)
+        }))
+      }, (err) => {
+        pushable.push(ty.create(actions.Part, {}))
+      })
     }
 
     pull(client, pullJson(server), client)

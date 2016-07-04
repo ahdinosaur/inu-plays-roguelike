@@ -1,16 +1,17 @@
-const Tc = require('tcomb')
+const ty = require('mintype')
+const declare = require('../util/declare')
 
-const Execute = Tc.declare('Execute')
+const Execute = declare()
 
 module.exports = Execute
 
 const Action = require('../types/action')
 
-Execute.define(Tc.struct({
+Execute.define(ty.struct('Execute', {
   action: Action
 }))
 
-Execute.prototype.update = function (model) {
+Execute.prototype.update = function updateExecute (model) {
   const { action } = this
   return action.update(model)
 }

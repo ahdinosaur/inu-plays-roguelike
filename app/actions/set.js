@@ -1,8 +1,8 @@
-const Tc = require('tcomb')
+const ty = require('mintype')
 
-const Set = Tc.struct({
-  model: Tc.Object
-}, 'Set')
+const Set = ty.struct('Set', {
+  model: ty.Object
+})
 
 Set.prototype.update = function moveUpdate (model) {
   const action = this
